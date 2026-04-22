@@ -1,55 +1,30 @@
 #include <stdio.h>
 #include <string.h>
 
-int main()
-{
-    char production[50], part1[20], part2[20];
-    char common[20];
-    char nonTerminal;
-    int i = 0, j = 0;
+int main() {
+    char p[50], a[20], b[20], c[20];
+    int i = 2, j = 0;
 
-    printf("Enter production (Example: S=iEtS|iEtSeS): ");
-    scanf("%s", production);
+    printf("Enter production: ");
+    scanf("%s", p);
 
-    nonTerminal = production[0];
+    // split into two parts
+    while (p[i] != '|') a[j++] = p[i++];
+    a[j] = '\0'; i++; j = 0;
+    while (p[i]) b[j++] = p[i++];
+    b[j] = '\0';
 
-    // Extract first alternative
-    for (i = 2; production[i] != '|'; i++)
-        part1[j++] = production[i];
-
-    part1[j] = '\0';
-    j = 0;
-    i++; // Skip '|'
-
-    // Extract second alternative
-    while (production[i] != '\0')
-        part2[j++] = production[i++];
-
-    part2[j] = '\0';
-
-    // Find common prefix
+    // find common prefix
     i = 0;
-    while (part1[i] == part2[i])
-    {
-        common[i] = part1[i];
-        i++;
-    }
+    while (a[i] == b[i]) c[i] = a[i], i++;
+    c[i] = '\0';
 
-    common[i] = '\0';
-
-    if (strlen(common) == 0)
-    {
-        printf("\nNo Left Factoring Needed.\n");
+    if (!strlen(c))
+        printf("No Left Factoring Needed\n");
+    else {
+        printf("After Left Factoring:\n");
+        printf("%c=%s%c'\n", p[0], c, p[0]);
+        printf("%c'=%s|%s\n", p[0], a+i, b+i);
     }
-    else
-    {
-        printf("\nLeft Factoring Possible!\n");
-        printf("\nAfter Left Factoring:\n");
-        printf("%c=%s%c'\n", nonTerminal, common, nonTerminal);
-        printf("%c'=%s|%s\n", nonTerminal,
-               part1 + strlen(common),
-               part2 + strlen(common));
-    }
-
     return 0;
 }
